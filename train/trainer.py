@@ -365,10 +365,10 @@ class Trainer(object):
              self.local_network.entropy, self.local_network.base_loss], feed_dict=feed_dict)
 
         summary = tf.summary.Summary()
-        summary.value.add(tag="policy_loss", simple_value=policy_loss)
-        summary.value.add(tag="value_loss", simple_value=value_loss)
-        summary.value.add(tag="entropy", simple_value=entropy)
-        summary.value.add(tag="base_loss", simple_value=base_loss)
+        summary.value.add(tag="{}/policy_loss".format(self.thread_index), simple_value=policy_loss)
+        summary.value.add(tag="{}/value_loss".format(self.thread_index), simple_value=value_loss)
+        summary.value.add(tag="{}/entropy".format(self.thread_index), simple_value=entropy)
+        summary.value.add(tag="{}/base_loss".format(self.thread_index), simple_value=base_loss)
         summary_writer.add_summary(summary, global_t)
 
         self._print_log(global_t)
