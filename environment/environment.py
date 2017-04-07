@@ -4,7 +4,6 @@ from __future__ import division
 from __future__ import print_function
 
 import numpy as np
-import cv2
 
 from constants import ENV_TYPE
 
@@ -20,6 +19,9 @@ class Environment(object):
     elif ENV_TYPE == 'lab':
       from . import lab_environment
       return lab_environment.LabEnvironment()
+    elif ENV_TYPE == "fake":
+      from . import fake_environment
+      return fake_environment.FakeEnvironment()
     else:
       from . import gym_environment
       return gym_environment.GymEnvironment()
@@ -37,6 +39,10 @@ class Environment(object):
       from . import lab_environment
       Environment.action_size = \
         lab_environment.LabEnvironment.get_action_size()
+    elif ENV_TYPE == "fake":
+      from . import fake_environment
+      Environment.action_size = \
+        fake_environment.FakeEnvironment.get_action_size()
     else:
       from . import gym_environment
       Environment.action_size = \
