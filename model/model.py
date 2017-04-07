@@ -259,12 +259,13 @@ class UnrealModel(object):
         log_pi = tf.log(tf.clip_by_value(self.base_pi, 1e-20, 1.0))
 
         # Policy entropy
-        self.entropy = -tf.reduce_sum(self.base_pi * log_pi, reduction_indices=1)
+        entropy = -tf.reduce_sum(self.base_pi * log_pi, reduction_indices=1)
+        self.entropy = tf.reduce_sum(entropy)
 
         # Policy loss (output)
         self.policy_loss = -tf.reduce_sum(tf.reduce_sum(tf.multiply(log_pi, self.base_a),
-                                                   reduction_indices=1) *
-                                     self.base_adv + self.entropy * ENTROPY_BETA)
+                                                        reduction_indices=1) *
+                                          self.base_adv + entropy * ENTROPY_BETA)
 
         # R (input for value target)
         self.base_r = tf.placeholder("float", [None])
