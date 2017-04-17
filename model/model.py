@@ -290,16 +290,16 @@ class UnrealModel(object):
         # TD target for Q
         self.pc_r = tf.placeholder("float", [None, 20, 20])
 
-        pc_loss = PIXEL_CHANGE_LAMBDA * tf.nn.l2_loss(self.pc_r - pc_qa)
-        return pc_loss
+        self.pc_loss = PIXEL_CHANGE_LAMBDA * tf.nn.l2_loss(self.pc_r - pc_qa)
+        return self.pc_loss
 
     def _vr_loss(self):
         # R (input for value)
         self.vr_r = tf.placeholder("float", [None])
 
         # Value loss (output)
-        vr_loss = tf.nn.l2_loss(self.vr_r - self.vr_v)
-        return vr_loss
+        self.vr_loss = tf.nn.l2_loss(self.vr_r - self.vr_v)
+        return self.vr_loss
 
     def _rp_loss(self):
         # reward prediction target. one hot vector
@@ -307,8 +307,8 @@ class UnrealModel(object):
 
         # Reward prediction loss (output)
         rp_c = tf.clip_by_value(self.rp_c, 1e-20, 1.0)
-        rp_loss = -tf.reduce_sum(self.rp_c_target * tf.log(rp_c))
-        return rp_loss
+        self.rp_loss = -tf.reduce_sum(self.rp_c_target * tf.log(rp_c))
+        return self.rp_loss
 
     def prepare_loss(self):
         with tf.device(self._device):

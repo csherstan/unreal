@@ -360,15 +360,19 @@ class Trainer(object):
             feed_dict.update(rp_feed_dict)
 
         # Calculate gradients and copy them to global netowrk.
-        _, policy_loss, value_loss, entropy, base_loss = sess.run(
+        _, policy_loss, value_loss, entropy, base_loss, pc_loss, vr_loss, rp_loss = sess.run(
             [self.apply_gradients, self.local_network.policy_loss, self.local_network.value_loss,
-             self.local_network.entropy, self.local_network.base_loss], feed_dict=feed_dict)
+             self.local_network.entropy, self.local_network.base_loss, self.local_network.pc_loss,
+             self.local_network.vr_loss, self.local_network.rp_loss], feed_dict=feed_dict)
 
         summary = tf.summary.Summary()
         summary.value.add(tag="{}/policy_loss".format(self.thread_index), simple_value=policy_loss)
         summary.value.add(tag="{}/value_loss".format(self.thread_index), simple_value=value_loss)
         summary.value.add(tag="{}/entropy".format(self.thread_index), simple_value=entropy)
         summary.value.add(tag="{}/base_loss".format(self.thread_index), simple_value=base_loss)
+        summary.value.add(tag="{}/pc_loss".format(self.thread_index), simple_value=pc_loss)
+        summary.value.add(tag="{}/vr_loss".format(self.thread_index), simple_value=vr_loss)
+        summary.value.add(tag="{}/rp_loss".format(self.thread_index), simple_value=rp_loss)
         summary_writer.add_summary(summary, global_t)
 
         self._print_log(global_t)
